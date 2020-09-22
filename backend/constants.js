@@ -1,6 +1,6 @@
-export const PRIORITY = {
-  urgent: '緊急',
-  high: '高',
-  middle: '中',
-  low: '低',
+module.exports = {
+  URGENT: '緊急',
+  HIGH: '高',
+  MIDDLE: '中',
+  LOW: '低',
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-import { PRIORITY } from './constants'
+const PRIORITY = require('./constants');
 
 const messages = [
   {
