@@ -38,3 +38,7 @@ app.get('/api/v1/inbox/:id', function (req, res) {
     res.send('error');
   }
 })
+
+app.listen(3001, () => {
+  console.log('listen on http://localhost:3001');
+})
