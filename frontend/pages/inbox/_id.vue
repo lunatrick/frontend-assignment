@@ -3,7 +3,7 @@
     <h1 class="Inbox__Title">
       Inbox
     </h1>
-    <p>id: {{$route.params.id}}</p>
+    <p>inboxAlias: {{ inbox.inboxAlias }}</p>
     <table>
       <thead>
         <td>送信者</td>
@@ -12,11 +12,11 @@
         <td>優先度</td>
       </thead>
       <tbody>
-        <tr v-for="mail in mails" :key="mail.id" class="Inbox__Messages">
-          <td> {{ mail.sender }} </td>
-          <td> {{ mail.sendTimeISO | toReadableDate }} </td>
-          <td> {{ mail.title }} </td>
-          <td> {{ mail.priority }} </td>
+        <tr v-for="(message, index) in inbox.messages" :key="index" class="Inbox__Messages">
+          <td> {{ message.messageSender }} </td>
+          <td> {{ message.messageAt | toReadableDate }} </td>
+          <td> {{ message.messageSubject }} </td>
+          <td> {{ message.messagePriority | toReadablePriority }} </td>
         </tr>
       </tbody>
     </table>
@@ -24,81 +24,37 @@
 </template>
 
 <script>
-const jwt = require('jsonwebtoken');
+import jwt_decode from 'jwt-decode';
 const axios = require('axios');
-
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-// instantly avoid cors
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 
 export default {
   data() {
     return {
-      mails: [],
-      // sender: '',
-      // sendTime: '',
-      // title: '',
-      // priority: '',
+      inbox: {
+        inboxAlias: null,
+        messages: [],
+      },
     }
   },
   async mounted() {
-    const url = `http://localhost:3001/api/v1/inbox/${this.$route.params.id}`;
+    const url = `https://coding-assignment-v1.now.sh/api/v1/inbox/${this.$route.params.id}`;
     const res = await axios.get(url);
-    const token = res.data;
-
-    jwt.verify(token, 'secret', (err, data) => {
-      if (!err) {
-        this.mails = data;
-      }
-      else console.log(err);
-    })
+    const token = res.data.payload;
+    this.inbox = jwt_decode(token);
   },
   filters: {
     toReadableDate: function (dateISO) {
-      if (!dateISO) return ''
+      if (!dateISO) return '';
       return new Date(dateISO).toString();
+    },
+    toReadablePriority: function (priorityNum) {
+      // 0の方が緊急度が高い場合
+      if (priorityNum == '0') return '緊急';
+      if (priorityNum == '1') return '高';
+      if (priorityNum == '2') return '中';
+      if (priorityNum == '3') return '低';
+      return priorityNum;
     }
   }
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
