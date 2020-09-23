@@ -44,9 +44,7 @@ app.get('/api/v1/inbox/:id', function (req, res) {
   try {
     const messages = messageBoxes.find(item => item.userId === Number(req.params.id));
     const payload = JSON.stringify(messages.mails);
-    console.log(payload);
     const token = jwt.sign(payload, 'secret');
-    console.log(token);
     res.header('Access-Control-Allow-Origin', '*')
     res.json(token);
   } catch (e) {

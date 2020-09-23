@@ -44,7 +44,6 @@ export default {
   async mounted() {
     const url = `http://localhost:3001/api/v1/inbox/${this.$route.params.id}`;
     const res = await axios.get(url);
-    console.log(res);
     const token = res.data;
 
     jwt.verify(token, 'secret', (err, data) => {
