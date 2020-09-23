@@ -4,15 +4,8 @@
 - Install Node.js
 
 ## How to use
-
-### Backend
-Simple dummy backend API is implemented.
-
-```
-$ cd backend
-$ npm install
-$ node index.js
-```
+### backend
+deprecated (I didn't notice API is provided) 
 
 ### Frontend
 ```
@@ -24,5 +17,5 @@ $ npm run start
 
 ### Usage
 1. open `http://localhost:3000`
-1. input inbox ID and click "メールを開く". As backend mock, 123456 and 234567 are only available.
-1. mock emails will be listed.
+1. input inbox ID and click "メールを開く".
+1. Messages will be listed.
