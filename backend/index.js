@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const app = express();
 const PRIORITY = require('./constants');
@@ -31,10 +32,13 @@ const messages = [
 
 app.get('/api/v1/inbox/:id', function (req, res) {
   try {
-    const payload = messages[Number(id)];
+    const payload = messages[Number(req.params.id)];
     const token = jwt.sign(payload, 'secret');
-    res.json({token});
+    console.log(token);
+    res.header('Access-Control-Allow-Origin', '*')
+    res.json(token);
   } catch (e) {
+    console.log('error');
     res.send('error');
   }
 })
