@@ -3,12 +3,23 @@
     <h1 class="Inbox__Title">
       Inbox
     </h1>
-    <ul v-for="mail in mails" :key="mail.id" class="Inbox__Messages">
-      <li>メッセージ送信者: {{ mail.sender }} </li>
-      <li>メッセージ送信時間: {{ mail.sendTimeISO | toReadableDate }} </li>
-      <li>タイトル: {{ mail.title }} </li>
-      <li>優先度: {{ mail.priority }} </li>
-    </ul> 
+    <p>id: {{$route.params.id}}</p>
+    <table>
+      <thead>
+        <td>送信者</td>
+        <td>送信時間</td>
+        <td>タイトル</td>
+        <td>優先度</td>
+      </thead>
+      <tbody>
+        <tr v-for="mail in mails" :key="mail.id" class="Inbox__Messages">
+          <td> {{ mail.sender }} </td>
+          <td> {{ mail.sendTimeISO | toReadableDate }} </td>
+          <td> {{ mail.title }} </td>
+          <td> {{ mail.priority }} </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
