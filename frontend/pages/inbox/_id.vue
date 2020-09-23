@@ -3,11 +3,11 @@
     <h1 class="Inbox__Title">
       Inbox
     </h1>
-    <ul class="Inbox__Messages">
-      <li>メッセージ送信者: {{ sender }} </li>
-      <li>メッセージ送信時間: {{ sendTimeISO }} </li>
-      <li>タイトル: {{ title }} </li>
-      <li>優先度: {{ priority }} </li>
+    <ul v-for="mail in mails" :key="mail.id" class="Inbox__Messages">
+      <li>メッセージ送信者: {{ mail.sender }} </li>
+      <li>メッセージ送信時間: {{ mail.sendTimeISO | toReadableDate }} </li>
+      <li>タイトル: {{ mail.title }} </li>
+      <li>優先度: {{ mail.priority }} </li>
     </ul> 
   </div>
 </template>
@@ -23,27 +23,32 @@ axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 export default {
   data() {
     return {
-      sender: '',
-      sendTime: '',
-      title: '',
-      priority: '',
+      mails: [],
+      // sender: '',
+      // sendTime: '',
+      // title: '',
+      // priority: '',
     }
   },
   async mounted() {
     const url = `http://localhost:3001/api/v1/inbox/${this.$route.params.id}`;
     const res = await axios.get(url);
+    console.log(res);
     const token = res.data;
 
     jwt.verify(token, 'secret', (err, data) => {
       if (!err) {
-        this.sender = data.sender;
-        this.sendTime = new Date(data.sendTimeISO).toLocaleString();
-        this.title = data.title;
-        this.priority = data.priority;
+        this.mails = data;
       }
       else console.log(err);
     })
   },
+  filters: {
+    toReadableDate: function (dateISO) {
+      if (!dateISO) return ''
+      return new Date(dateISO).toString();
+    }
+  }
 }
 </script>
 
